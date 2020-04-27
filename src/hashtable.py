@@ -1,7 +1,7 @@
 class HashTable(object):
-    def __init__(self, length=4):
+    def __init__(self, buckets=10):
         # Initiate our array with empty values.
-        self.array = [None] * length
+        self.table = [None] * buckets
     
     def hash(self, key):
         """Get the index of our array for a specific string key"""
