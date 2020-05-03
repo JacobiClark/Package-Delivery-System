@@ -8,7 +8,7 @@ class Package:
         self.state = state
         self.zip = zipcode
         if 'EOD' in deliver_by:
-            self.deliver_by = "blah"
+            self.deliver_by = "EOD"
         else: self.deliver_by = datetime.datetime.strptime(deliver_by, '%H:%M').time()
         self.weight_in_kilograms = weight_in_kilograms
         self.deliver_by = deliver_by
@@ -16,3 +16,4 @@ class Package:
 
     def get_package_id(self):
         return int(self.package_ID)
+

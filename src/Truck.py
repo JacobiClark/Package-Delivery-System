@@ -13,12 +13,10 @@ class Truck:
         self.start_location = start_location
         self.distance_driven = 0
         self.packages_onboard = []
-        self.addresses_delivered = addresses_delivered
 
-    def add_package(self, package)
+    def load_package(self, package, deliver_by)
         if len(self.packages_onboard) < self.max_packages:
             self.packages_onboard.append(package)
-            print("I'm a", self.attr1)  
 
 
 Baja = Truck(3,a)
