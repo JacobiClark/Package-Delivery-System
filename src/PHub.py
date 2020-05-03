@@ -6,6 +6,7 @@ import collections
 class PHub:
     def start(self):
         packages_hash_table = HashTable(50)
+        distances_list = []
 
         with open('../assets/csv/packages.csv') as csvfile:
             packages = csv.reader(csvfile)
@@ -13,6 +14,12 @@ class PHub:
                 new_package = Package(*data_row)
                 packages_hash_table.insert_kvp(new_package.get_package_id, new_package)
 
+        with open('../assets/csv/distances.csv') as csvfile:
+            distances = csv.reader(csvfile, delimiter=',')
+            for data_row in distances:
+                distances_list.append(data_row)
+            
+        print(distances_list)
     
 phub = PHub()
 phub.start()
