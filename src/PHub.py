@@ -33,13 +33,22 @@ class Package:
 
 class Graph:
     def __init__(self):
-        self.locations_list = []
         self.distances_list = []
+        self.locations_list = []
         self.adjacency_list = {}
-        
-    def aadd_Path(self, from_location, to_location, weight = 1.0):
+        self.edge_weights = {}
+
+
+    def add_location(self, location):
+        self.adjacency_list[location] = {}
+            
+    def add_directed_edge(self, from_vertex, to_vertex, weight = 1.0):
         self.edge_weights[(from_vertex, to_vertex)] = weight
         self.adjacency_list[from_vertex].append(to_vertex)
+        
+    def add_undirected_edge(self, vertex_a, vertex_b, weight = 1.0):
+        self.add_directed_edge(vertex_a, vertex_b, weight)
+        self.add_directed_edge(vertex_b, vertex_a, weight)
  
 class PHub:
     def start(self):
@@ -56,6 +65,7 @@ class PHub:
             locations = csv.reader(csvfile)
             for data_row in locations:
                 new_location = Location(*data_row)
+                graph.add_location(new_location)
                 graph.locations_list.append(new_location)
 
         with open('../assets/csv/distances.csv') as csvfile:
@@ -64,15 +74,15 @@ class PHub:
                 graph.distances_list.append(data_row)
             print(graph.distances_list)
 
-        for location in graph.locations_list:
-            graph.adjacency_list[location] = {}
-            
-        for location_set in graph.distances_list:
-            for edge in location_set:
-                x = 1
-                if edge != '':
-                    graph.adjacency_list[location][]
+        for location in graph.adjacency_list:
+            for i, distance_set in enumerate(graph.distances_list):
+                for j, edge in enumerate(distance_set):
+                    if edge != '':
+                        graph.adjacency_list[location][graph.locations_list[i]] = float(j)
+                    else:
+                        graph.adjacency_list[location][graph.locations_list[j]] = float(i)
 
+        print(graph.adjacency_list[graph.locations_list[1]][graph.locations_list[1]])
 
 
 
