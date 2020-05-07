@@ -1,23 +1,25 @@
 import datetime
 
 class Truck:
-    max_packages = 16
-    avg_speed_MPH = 18
-    start_time = datetime.time(8, 00, 00)
-
+   
     def __init__(self, truck_number, start_location):
-        self.max_packages = max_packages
-        self.avg_speed_MPH = avg_speed_MPH
-        self.start_time = start_time
+        self.max_packages = 16
+        self.avg_speed_MPH = 18
+        self.start_time = datetime.time(8, 00, 00)
         self.truck_number = truck_number
         self.start_location = start_location
         self.distance_driven = 0
-        self.packages_onboard = []
+        self.delivery_list = []
 
-    def load_package(self, package, deliver_by)
-        if len(self.packages_onboard) < self.max_packages:
-            self.packages_onboard.append(package)
+    def load_package(self, package, deliver_by):
+        if len(self.delivery_list) < self.max_packages:
+            self.delivery_list.append(package)
 
+    #def deliver_packages(self):
+    #    while len(self.delivery_list) > 0:
 
-Baja = Truck(3,a)
-Baja.add_package('blah')
+    def has_room(self):
+        if len(self.delivery_list) < self.max_packages:
+            return true
+        else:
+            return false
