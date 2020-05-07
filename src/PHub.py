@@ -46,9 +46,6 @@ class Graph:
         for distance in self.locations_list:
             if distance.address == from_address:
                 return distance.adjacent_paths[to_location]
-                print(distance.adjacent_paths[to_location])
-            else:
-                print('distance not found')
 
 
     def add_location(self, location):
@@ -58,6 +55,7 @@ class PHub:
     def start(self):
         priority_packages_hash_table = HashTable(50)
         packages_hash_table = HashTable(50)
+        testlist = []
         graph = Graph()
             #Reads Packages CSV file and instantiates a new package for each row
             #if package delivery by is end of day, package is appended to the regular package hash table
@@ -94,15 +92,22 @@ class PHub:
         #while len(Truck1.delivery_list) < Truck1.max_packages:
 
         #LOAD THE TRUCK
-        starting_location = graph.locations_list[0]
-        print(graph.calculate_distance(graph.locations_list[3].address, graph.locations_list[1].address))
-
-        for i, kvp in enumerate(priority_packages_hash_table.array):
+        current_location = graph.locations_list[0]
+        for i,kvp in enumerate(priority_packages_hash_table.array):
             if kvp != None:
-                nearest_address = 100
-                if graph.calculate_distance(starting_location.address, kvp[i][1].address) <= graph.calculate_distance(starting_location.from_address, nearest_address):
-                    nearest_address = kvp[i-1][1]
-                    print(nearest_address)
+                print(current_location.address)
+                print(graph.calculate_distance(current_location.address, kvp[0][1].address))
+
+
+#        for i, kvp in enumerate(priority_packages_hash_table.array):
+#            if kvp != None:
+#                nearest_address = kvp[0][1]
+#                print('hi')
+#                print(current_location.address)
+#                print(graph.calculate_distance(current_location.address, kvp[0][1].address))
+#                if graph.calculate_distance(current_location.address, kvp[i][1].address) <= graph.calculate_distance(current_location.from_address, nearest_address):
+#                    nearest_address = kvp[i-1][1]
+#                    print(nearest_address)
 
 
 
