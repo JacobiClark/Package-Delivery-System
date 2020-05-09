@@ -1,6 +1,7 @@
 import datetime
 
 class Truck:
+    max_packages = 16
    
     def __init__(self, truck_number, start_location):
         self.max_packages = 16
@@ -20,6 +21,6 @@ class Truck:
 
     def has_room(self):
         if len(self.delivery_list) < self.max_packages:
-            return true
+            return True
         else:
-            return false
+            return False
