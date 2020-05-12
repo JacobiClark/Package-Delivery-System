@@ -1,29 +1,14 @@
 import csv
 import Truck
-import Model
+from Model import Graph, Location, Package, Truck
 import datetime
 from HashTable import HashTable
 import collections
 # Hub class
-
-class Graph:
-    def __init__(self):
-        self.adjacency_list = {}
-        self.edge_weights = {}
-    
-    def calculate_distance(self, from_address, to_location):
-        for distance in self.locations_list:
-            if distance.address == from_address:
-                return distance.adjacent_paths[to_location]
-
-
-    def add_location(self, location):
-        self.adjacency_list[location.address] = {location}
  
 class PHub:
     def start(self):
         priority_packages_hash_table = HashTable(50)
-
         packages_hash_table = HashTable(50)
         graph = Graph()
         #Reads Packages CSV file and instantiates a new package for each row
@@ -34,16 +19,16 @@ class PHub:
             for data_row in packages:
                 new_package = Package(*data_row)
                 if new_package.deliver_by == 'EOD':
-                    packages_hash_table.insert_kvp(new_package.address, new_package)
+                    packages_hash_table.insert_kvp(new_package.package_ID, new_package)
                 else:
-                    priority_packages_hash_table.insert_kvp(new_package.address, new_package)
+                    priority_packages_hash_table.insert_kvp(new_package.package_ID, new_package)
 
         #Reads Locations CSV file and instantiates a Location object which is then added to the Graph's adjacency list and the location list
         with open('../assets/csv/locations.csv') as csvfile:
             locations = csv.reader(csvfile)
             for data_row in locations:
                 new_location = Location(*data_row)
-                graph.add_location(new_location)
+                graph.locations_hash_table.insert_kvp(new_location.location_ID, new_location)
 
         #Reads Distance CSV and adds a distance set to the distances list, creating in essence a 2D array.
         with open('../assets/csv/distances.csv') as csvfile:
@@ -52,25 +37,20 @@ class PHub:
                 graph.distances_list.append(data_row)
 
         #Uses the distance list to add the distance to every other location to every Location's adjacent path dictionary.
+        for location in graph.locations_hash_table.table:
+            print(location)
+
+        print(graph.locations_hash_table.get_value(0))
+
+        print(graph.locations_hash_table.get_value(4))
         for s, distance_set in enumerate(graph.distances_list):
             for d, distance in enumerate(distance_set):
-                graph.locations_list[s].add_adjacent_path(graph.locations_list[d].address, graph.distances_list[s][d])
-        
-        Truck1 = Truck.Truck(1, 'Hub')
-
+                print(graph.locations_hash_table.get_value(s))
+    
 
         #while len(Truck1.delivery_list) < Truck1.max_packages:
 
         #LOAD PACKAGES TO LOADING DOCK
-        loading_dock = []
-        current_location = graph.locations_list[0]
-        for bucket in priority_packages_hash_table.array:
-            closest_package = 1000
-            closest_package = graph.locations_list[1]
-            print(closest_package)
-            if bucket != None:
-                for kvp in bucket:
-                    print(kvp[1].address)
 
 
 
@@ -92,5 +72,6 @@ class PHub:
         
 phub = PHub()
 phub.start()
+
 
 
