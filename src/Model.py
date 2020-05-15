@@ -17,7 +17,7 @@ class Graph:
         sorted_list = []
         nearest_location = 3000
         for package in packageID_addresses_list:
-            print(start_location_object.adjacent_paths)
+            pass
 
     def get_nearest_location(self, from_location, location_list):
         nearest_location = 3000
@@ -25,7 +25,7 @@ class Graph:
             print(location)
 
     def calculate_distance(self, from_location, to_location):
-        print(from_location.adjacent_paths[to_location])
+        print(from_location.adjacent_paths[to_location.address])
 
 
 

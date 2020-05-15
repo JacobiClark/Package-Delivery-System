@@ -43,7 +43,7 @@ class PHub:
 
         for s, distance_set in enumerate(graph.distances_list):
             for d, distance in enumerate(distance_set):
-                graph.locations_hash_table.get_value(s).add_adjacent_path(d, distance) #graph.locations_hash_table.get_value(d)
+                graph.locations_hash_table.get_value(s).add_adjacent_path(graph.locations_hash_table.get_value(d).address, distance) #graph.locations_hash_table.get_value(d)
 
         while len(loading_dock) < Truck.max_packages:
             if priority_packages_hash_table.item_count() != 0:
@@ -51,14 +51,14 @@ class PHub:
                     if bucket != None:
                         for kvp in bucket:
                             if len(loading_dock) < Truck.max_packages:
-                                load_package(kvp[0])
+                                load_package(kvp[1])
                                 bucket.remove(kvp)
             if packages_hash_table.item_count() != 0:
                 for bucket in packages_hash_table.table:
                     if bucket != None:
                         for kvp in bucket:
                             if len(loading_dock) < Truck.max_packages:
-                                load_package(kvp[0])
+                                load_package(kvp[1])
                                 bucket.remove(kvp)
         
         Truck2 = Truck(2, graph.locations_hash_table.get_value(0))
