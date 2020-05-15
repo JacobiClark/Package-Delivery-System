@@ -8,11 +8,11 @@ class Truck:
         self.avg_speed_MPH = 18
         self.start_time = datetime.time(8, 00, 00)
         self.truck_number = truck_number
-        self.start_location = start_location
+        self.current_location = start_location
         self.distance_driven = 0
         self.delivery_list = []
 
-    def load_package(self, package, deliver_by):
+    def load_package(self, package):
         if len(self.delivery_list) < self.max_packages:
             self.delivery_list.append(package)
 

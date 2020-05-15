@@ -9,11 +9,25 @@ class Graph:
     def add_location(self, new_location):
         self.locations_hash_table.insert_kvp(new_location.location_ID, new_location)
 
-
-
     def add_path(self, from_location, to_location, distance = 1.0):
         print(self.locations_hash_table.get_value(from_location))
         self.locations_hash_table.get_value(from_location).add_adjacent_path(self.locations_hash_table.get_value(to_location), distance)
+
+    def sort_packages(self, packageID_addresses_list, start_location_object):
+        sorted_list = []
+        nearest_location = 3000
+        for package in packageID_addresses_list:
+            print(start_location_object.adjacent_paths)
+
+    def get_nearest_location(self, from_location, location_list):
+        nearest_location = 3000
+        for location in location_list:
+            print(location)
+
+    def calculate_distance(self, from_location, to_location):
+        print(from_location.adjacent_paths[to_location])
+
+
 
 
 class Location():
@@ -57,16 +71,18 @@ class Truck:
         self.distance_driven = 0
         self.delivery_list = []
 
-    def load_package(self, package, deliver_by):
+    def load_package(self, package):
         if len(self.delivery_list) < self.max_packages:
             self.delivery_list.append(package)
 
-    #def deliver_packages(self):
-    #    while len(self.delivery_list) > 0:
+    def has_packages(self):
+        return len(self.delivery_list) > 0
+
+    def deliver_packages(self, city_map, return_to_hub=True):
+        current_location = self.start_location
+
+        #while self.has_packages():
+
 
     def has_room(self):
-        if len(self.delivery_list) < self.max_packages:
-            return True
-        else:
-            return False
- 
+        return len(self.delivery_list) < self.max_packages

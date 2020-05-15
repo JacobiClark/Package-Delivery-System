@@ -30,10 +30,24 @@ class HashTable(object):
         for kvp in self.table[bucket]:
             if kvp[0] == key:
                 return kvp[1]
+    
+    def remove_all_items(self):
+        for bucket in self.table:
+            if bucket != None:
+                for kvp in bucket:
+                    bucket.remove(kvp)
+                    print('bucket was removed')
 
-    def remove_kvp(self, key, value):
+    def remove_kvp(self, key):
         bucket = self.hash_key(key)
         for kvp in self.table[bucket]:
             if kvp[0] == key:
-                return[kvp[1]]
                 del kvp
+
+    def item_count(self):
+        count = 0
+        for bucket in self.table:
+            if bucket != None or []:
+                for kvp in bucket:
+                    count += 1
+        return count
