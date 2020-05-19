@@ -10,23 +10,23 @@ class Graph:
         self.locations_hash_table.insert_kvp(new_location.location_ID, new_location)
 
     def add_path(self, from_location, to_location, distance = 1.0):
-        print(self.locations_hash_table.get_value(from_location))
         self.locations_hash_table.get_value(from_location).add_adjacent_path(self.locations_hash_table.get_value(to_location), distance)
 
-    def sort_packages(self, packageID_addresses_list, start_location_object):
-        sorted_list = []
-        nearest_location = 3000
-        for package in packageID_addresses_list:
-            pass
-
-    def get_nearest_location(self, from_location, location_list):
-        nearest_location = 3000
-        for location in location_list:
-            print(location)
-
     def calculate_distance(self, from_location, to_location):
-        print(from_location.adjacent_paths[to_location.address])
+        return float(self.locations_hash_table.get_value(from_location.address).adjacent_paths[to_location.address])
 
+    def sort_packages(self, Truck, start_location_object):
+        sorted_list = []
+        current_location = start_location_object
+        while len(Truck.delivery_list) !=  0:
+            closest_package = Truck.delivery_list[0]
+            for package in Truck.delivery_list:
+                if self.calculate_distance(start_location_object, package) < self.calculate_distance(start_location_object, closest_package):
+                    closest_package = package
+            sorted_list.append(closest_package)
+            current_location = self.locations_hash_table.get_value(closest_package.address)
+            Truck.delivery_list.remove(closest_package)
+        Truck.delivery_list = sorted_list
 
 
 
@@ -40,9 +40,6 @@ class Location():
 
     def add_adjacent_path(self, to_location, distance = 0):
         self.adjacent_paths[to_location] = distance
-
-    def print_adjacent_paths(self):
-        print(self.adjacent_paths)
 
 
 class Package:
@@ -68,7 +65,7 @@ class Truck:
         self.start_time = datetime.time(8, 00, 00)
         self.truck_number = truck_number
         self.start_location = start_location
-        self.distance_driven = 0
+        self.distance_driven = float(0)
         self.delivery_list = []
 
     def load_package(self, package):
@@ -78,10 +75,13 @@ class Truck:
     def has_packages(self):
         return len(self.delivery_list) > 0
 
-    def deliver_packages(self, city_map, return_to_hub=True):
+    def deliver_packages(self, Graph, start_time):
         current_location = self.start_location
-
-        #while self.has_packages():
+        print(self.distance_driven)
+        while self.has_packages():
+            self.distance_driven += Graph.calculate_distance(current_location, self.delivery_list[0])
+            current_location = self.delivery_list.pop()
+        print(self.distance_driven)
 
 
     def has_room(self):
