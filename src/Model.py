@@ -77,11 +77,9 @@ class Truck:
 
     def deliver_packages(self, Graph, start_time):
         current_location = self.start_location
-        print(self.distance_driven)
         while self.has_packages():
             self.distance_driven += Graph.calculate_distance(current_location, self.delivery_list[0])
             current_location = self.delivery_list.pop()
-        print(self.distance_driven)
 
 
     def has_room(self):

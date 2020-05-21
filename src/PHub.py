@@ -50,36 +50,48 @@ class PHub:
         #MAIN SECTION, START LOADING HERE!!!
         #while package_count > 0:
 
-        for x in range(3):
+        while package_count > 0:
             print(package_count)
             print('start')
-            while len(loading_dock) < Truck.max_packages and priority_packages_hash_table.item_count() > 0 and packages_hash_table.item_count() > 0:
-                if priority_packages_hash_table.item_count() != 0:
-                    for bucket in priority_packages_hash_table.table:
-                        if bucket != None:
-                            for kvp in bucket:
+            while priority_packages_hash_table.item_count() > 0 and len(loading_dock) < Truck.max_packages:  #
+                for bucket in priority_packages_hash_table.table:
+                    if bucket != None:
+                        for kvp in bucket:
+                            if len(loading_dock) < Truck.max_packages:
                                 load_package(kvp[1])
                                 bucket.remove(kvp)
-                if packages_hash_table.item_count() != 0:
-                    for bucket in packages_hash_table.table:
-                        if bucket != None:
-                            for kvp in bucket:
+                                print('prio package removed')
+            print('done with prio')
+            print(len(loading_dock))
+            print(Truck.max_packages)
+            while packages_hash_table.item_count() > 0 and len(loading_dock) < Truck.max_packages:
+                for bucket in packages_hash_table.table:
+                    if bucket != None:
+                        for kvp in bucket:
+                            if len(loading_dock) < Truck.max_packages and len(loading_dock) < Truck.max_packages:
                                 load_package(kvp[1])
                                 bucket.remove(kvp)
+                                print('reg package removed ')
+                                print(len(loading_dock))
+            print('done with reg')
             start_location = graph.locations_hash_table.get_value('Hub')
             Truck2 = Truck(2, start_location)
             #LOAD THE TRUCK
+            print('loading')
             while Truck2.has_room() and len(loading_dock) > 0:
                 for package in loading_dock:
                     Truck2.load_package(package)
                     loading_dock.remove(package)
             graph.sort_packages(Truck2, start_location)
             packages_delivered = len(Truck2.delivery_list)
+            print('packages delivered')
             print(packages_delivered)
             Truck2.deliver_packages(graph, current_time)
             package_count -= packages_delivered
             print('ALL DONE END OF LOOP')
+            print('remaining packages')
             print(package_count)
+
 
         #Truck2.deliver_packages()
 
