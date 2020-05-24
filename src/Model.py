@@ -21,12 +21,13 @@ class Graph:
         while len(Truck.delivery_list) !=  0:
             closest_package = Truck.delivery_list[0]
             for package in Truck.delivery_list:
-                if self.calculate_distance(start_location_object, package) < self.calculate_distance(start_location_object, closest_package):
+                if self.calculate_distance(current_location, package) < self.calculate_distance(current_location, closest_package):
                     closest_package = package
             sorted_list.append(closest_package)
             current_location = self.locations_hash_table.get_value(closest_package.address)
             Truck.delivery_list.remove(closest_package)
         Truck.delivery_list = sorted_list
+
 
 
 
@@ -77,9 +78,13 @@ class Truck:
 
     def deliver_packages(self, Graph, start_time):
         current_location = self.start_location
+        print('current mileage')
+        print(self.distance_driven)
         while self.has_packages():
             self.distance_driven += Graph.calculate_distance(current_location, self.delivery_list[0])
             current_location = self.delivery_list.pop()
+        print('distance driven')
+        print(self.distance_driven)
 
 
     def has_room(self):
