@@ -30,12 +30,30 @@ class HashTable(object):
         for kvp in self.table[bucket]:
             if kvp[0] == key:
                 return kvp[1]
+    
+    def get_all_values(self):
+        values_list = []
+        for bucket in self.table:
+            if bucket != None:
+                for kvp in bucket:
+                    values_list.append(kvp[1])
+        return values_list
+
+    def get_packages_in_hub(self):
+        values_list = []
+        for bucket in self.table:
+            if bucket != None:
+                for kvp in bucket:
+                    if kvp[1].status == 'At Hub':
+                        values_list.append(kvp[1])
+        return values_list
+
 
     def remove_kvp(self, key):
         bucket = self.hash_key(key)
         for kvp in self.table[bucket]:
             if kvp[0] == key:
-                del kvp
+                self.table[bucket].remove(kvp)
 
     def item_count(self):
         count = 0

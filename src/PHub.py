@@ -16,6 +16,7 @@ class PHub:
         current_time = timedelta(hours=8)
         def load_package(package):
             loading_dock.append(package)
+            package.status = 'Loaded on Truck'
         
         #Reads Packages CSV file and instantiates a new package for each row
         #if package delivery by is end of day, package is appended to the regular package hash table
@@ -41,7 +42,7 @@ class PHub:
         #Reads Distance CSV and adds a distance set to the distances list, creating in essence a 2D array.
         with open('../assets/csv/distances.csv') as csvfile:
             distances = csv.reader(csvfile)
-            for data_row in distances:
+            for data_row in distances:                     
                 graph.distances_list.append(data_row)
 
         for s, distance_set in enumerate(graph.distances_list):
@@ -49,27 +50,25 @@ class PHub:
                 locations_list[s].add_adjacent_path(locations_list[d].address, distance)
         #MAIN SECTION, START LOADING HERE!!!
         #while package_count > 0:
+        start_location = graph.locations_hash_table.get_value('Hub')
+        Truck2 = Truck(2, start_location)
 
+        
         while package_count > 0:
             print(package_count)
-            while priority_packages_hash_table.item_count() > 0 and len(loading_dock) < Truck.max_packages:  #
-                for bucket in priority_packages_hash_table.table:
-                    if bucket != None:
-                        for kvp in bucket:
-                            if len(loading_dock) < Truck.max_packages:
-                                load_package(kvp[1])
-                                bucket.remove(kvp)
-            print(len(loading_dock))
-            print(Truck.max_packages)
-            while packages_hash_table.item_count() > 0 and len(loading_dock) < Truck.max_packages:
-                for bucket in packages_hash_table.table:
-                    if bucket != None:
-                        for kvp in bucket:
-                            if len(loading_dock) < Truck.max_packages and len(loading_dock) < Truck.max_packages:
-                                load_package(kvp[1])
-                                bucket.remove(kvp)
-            start_location = graph.locations_hash_table.get_value('Hub')
-            Truck2 = Truck(2, start_location)
+            while len(priority_packages_hash_table.get_packages_in_hub()) > 0 and len(loading_dock) < Truck.max_packages:  #
+                if len(loading_dock) == 0:
+                    closest_package = graph.get_closest_location(start_location, priority_packages_hash_table.get_packages_in_hub())
+                    load_package(closest_package)
+                closest_package = graph.get_closest_location(loading_dock[-1], priority_packages_hash_table.get_packages_in_hub())
+                load_package(closest_package)
+            while len(packages_hash_table.get_packages_in_hub()) > 0 and len(loading_dock) < Truck.max_packages:  #
+                if len(loading_dock) == 0:
+                    closest_package = graph.get_closest_location(start_location, packages_hash_table.get_packages_in_hub())
+                    load_package(closest_package)
+                closest_package = graph.get_closest_location(loading_dock[-1], packages_hash_table.get_packages_in_hub())
+                load_package(closest_package)
+
             #LOAD THE TRUCK
             while Truck2.has_room() and len(loading_dock) > 0:
                 for package in loading_dock:
@@ -81,12 +80,6 @@ class PHub:
             Truck2.deliver_packages(graph, current_time)
             package_count -= packages_delivered
 
-
-        #Truck2.deliver_packages()
-
-        #while len(Truck2.delivery_list) < Truck2.max_packages:
-
-        #LOAD PACKAGES TO LOADING DOCK
         
 phub = PHub()
 phub.start()

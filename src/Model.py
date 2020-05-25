@@ -15,6 +15,13 @@ class Graph:
     def calculate_distance(self, from_location, to_location):
         return float(self.locations_hash_table.get_value(from_location.address).adjacent_paths[to_location.address])
 
+    def get_closest_location(self, from_location, to_location_list):
+        closest_location = to_location_list[0]
+        for location in to_location_list:
+            if self.calculate_distance(from_location, location) < self.calculate_distance(from_location, closest_location):
+                closest_location = location
+        return closest_location
+
     def sort_packages(self, Truck, start_location_object):
         sorted_list = []
         current_location = start_location_object
@@ -56,6 +63,8 @@ class Package:
         self.weight_in_kilograms = weight_in_kilograms
         self.deliver_by = deliver_by
         self.package_notes = package_notes
+        self.status = 'At Hub'
+
 
 class Truck:
     max_packages = 16
@@ -66,7 +75,7 @@ class Truck:
         self.start_time = datetime.time(8, 00, 00)
         self.truck_number = truck_number
         self.start_location = start_location
-        self.distance_driven = float(0)
+        self.distance_driven = 0
         self.delivery_list = []
 
     def load_package(self, package):
