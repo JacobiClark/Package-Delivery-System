@@ -55,7 +55,6 @@ class PHub:
 
         
         while package_count > 0:
-            print(package_count)
             while len(priority_packages_hash_table.get_packages_in_hub()) > 0 and len(loading_dock) < Truck.max_packages:  #
                 if len(loading_dock) == 0:
                     closest_package = graph.get_closest_location(start_location, priority_packages_hash_table.get_packages_in_hub())
@@ -79,6 +78,8 @@ class PHub:
             packages_delivered = len(Truck2.delivery_list)
             Truck2.deliver_packages(graph, current_time)
             package_count -= packages_delivered
+
+        print(Truck2.distance_driven)
 
         
 phub = PHub()

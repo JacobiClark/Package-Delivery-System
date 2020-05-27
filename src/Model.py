@@ -81,19 +81,20 @@ class Truck:
     def load_package(self, package):
         if len(self.delivery_list) < self.max_packages:
             self.delivery_list.append(package)
+            package.status = 'Loaded on Truck 2'
 
     def has_packages(self):
         return len(self.delivery_list) > 0
 
     def deliver_packages(self, Graph, start_time):
         current_location = self.start_location
-        print('current mileage')
-        print(self.distance_driven)
         while self.has_packages():
             self.distance_driven += Graph.calculate_distance(current_location, self.delivery_list[0])
-            current_location = self.delivery_list.pop()
-        print('distance driven')
-        print(self.distance_driven)
+            print('drive from ' + str(current_location.address) + ' to ' + str(self.delivery_list[0].address) +': ' + str(Graph.calculate_distance(current_location, self.delivery_list[0])))
+            self.delivery_list[0].status = 'Delivered'
+            current_location = self.delivery_list[0]
+            del self.delivery_list[0]
+        self.distance_driven += Graph.calculate_distance(current_location, Graph.locations_hash_table.get_value('Hub'))
 
 
     def has_room(self):
