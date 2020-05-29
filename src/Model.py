@@ -87,10 +87,10 @@ class Truck:
         return len(self.delivery_list) > 0
 
     def deliver_packages(self, Graph, start_time):
+        print(start_time)
         current_location = self.start_location
         while self.has_packages():
             self.distance_driven += Graph.calculate_distance(current_location, self.delivery_list[0])
-            print('drive from ' + str(current_location.address) + ' to ' + str(self.delivery_list[0].address) +': ' + str(Graph.calculate_distance(current_location, self.delivery_list[0])))
             self.delivery_list[0].status = 'Delivered'
             current_location = self.delivery_list[0]
             del self.delivery_list[0]
