@@ -9,8 +9,8 @@ class PHub:
     def __init__(self, package_overview_time):
         self.priority_packages_hash_table = HashTable(50)
         self.packages_hash_table = HashTable(50)
-        self.current_time = datetime.datetime(2020,3,15,8,0,4)
-        self.current_time += datetime.timedelta(seconds=22)
+        self.late_packages_hash_table = HashTable(10)
+        self.current_time = datetime.datetime(2020,3,15,8,0,0)
         self.package_count = 0
         self.loading_dock = []
         self.locations_list = []
@@ -31,8 +31,11 @@ class PHub:
             packages = csv.reader(csvfile)
             for data_row in packages:
                 new_package = Package(*data_row)
-                if new_package.deliver_by == 'EOD':
+                if new_package.deliver_by == 'EOD' and 'Delayed on flight' not in new_package.package_notes:
                     self.packages_hash_table.insert_kvp(new_package.package_ID, new_package)
+                    self.package_count += 1
+                if 'Delayed on flight' in new_package.package_notes:
+                    self.late_packages_hash_table.insert_kvp(new_package.package_ID, new_package)
                     self.package_count += 1
                 else:
                     self.priority_packages_hash_table.insert_kvp(new_package.package_ID, new_package)
@@ -57,12 +60,17 @@ class PHub:
         #MAIN SECTION, START LOADING HERE!!!
         #while self.package_count > 0:
         start_location = self.graph.locations_hash_table.get_value('Hub')
-        Truck2 = Truck(2, start_location)
+        Truck2 = Truck(2, start_location, self.current_time)
         
 
         
         while self.package_count > 0:
-
+            while self.current_time > datetime.datetime(2020,3,15,9,45,0) and len(self.late_packages_hash_table.get_packages_in_hub()) > 0 and len(self.loading_dock) < Truck.max_packages:  #
+                if len(self.loading_dock) == 0:
+                    closest_package = self.graph.get_closest_location(start_location, self.late_packages_hash_table.get_packages_in_hub())
+                    self.load_package(closest_package)
+                closest_package = self.graph.get_closest_location(self.loading_dock[-1], self.late_packages_hash_table.get_packages_in_hub())
+                self.load_package(closest_package)
             while len(self.priority_packages_hash_table.get_packages_in_hub()) > 0 and len(self.loading_dock) < Truck.max_packages:  #
                 if len(self.loading_dock) == 0:
                     closest_package = self.graph.get_closest_location(start_location, self.priority_packages_hash_table.get_packages_in_hub())
@@ -84,8 +92,9 @@ class PHub:
 
             self.graph.sort_packages(Truck2, start_location)
             packages_delivered = len(Truck2.delivery_list)
-            Truck2.deliver_packages(self.graph, self.current_time)
+            self.current_time = Truck2.deliver_packages(self.graph, self.current_time)
             self.package_count -= packages_delivered
+        print(self.current_time)
         print('All packages deliverd in ' + str(Truck2.distance_driven) + ' miles!')
 
         

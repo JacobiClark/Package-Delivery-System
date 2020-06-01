@@ -69,7 +69,7 @@ class Package:
 class Truck:
     max_packages = 16
    
-    def __init__(self, truck_number, start_location):
+    def __init__(self, truck_number, start_location, current_time):
         self.max_packages = 16
         self.avg_speed_MPH = 18
         self.start_time = datetime.time(8, 00, 00)
@@ -86,15 +86,21 @@ class Truck:
     def has_packages(self):
         return len(self.delivery_list) > 0
 
-    def deliver_packages(self, Graph, start_time):
-        print(start_time)
+    def deliver_packages(self, Graph, current_time):
         current_location = self.start_location
+        self.current_time = current_time
         while self.has_packages():
-            self.distance_driven += Graph.calculate_distance(current_location, self.delivery_list[0])
+            next_trip_length = Graph.calculate_distance(current_location, self.delivery_list[0])
+            self.distance_driven += next_trip_length
             self.delivery_list[0].status = 'Delivered'
             current_location = self.delivery_list[0]
+            time_of_trip = round((next_trip_length/self.avg_speed_MPH*3600))
+            self.current_time += datetime.timedelta(seconds=time_of_trip)
+            print(self.current_time)
             del self.delivery_list[0]
         self.distance_driven += Graph.calculate_distance(current_location, Graph.locations_hash_table.get_value('Hub'))
+        return self.current_time
+
 
 
     def has_room(self):
