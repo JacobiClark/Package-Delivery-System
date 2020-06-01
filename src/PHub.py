@@ -34,7 +34,7 @@ class PHub:
                 if new_package.deliver_by == 'EOD' and 'Delayed on flight' not in new_package.package_notes:
                     self.packages_hash_table.insert_kvp(new_package.package_ID, new_package)
                     self.package_count += 1
-                if 'Delayed on flight' in new_package.package_notes:
+                elif 'Delayed on flight' in new_package.package_notes:
                     self.late_packages_hash_table.insert_kvp(new_package.package_ID, new_package)
                     self.package_count += 1
                 else:
@@ -71,6 +71,7 @@ class PHub:
                     self.load_package(closest_package)
                 closest_package = self.graph.get_closest_location(self.loading_dock[-1], self.late_packages_hash_table.get_packages_in_hub())
                 self.load_package(closest_package)
+            print('done')
             while len(self.priority_packages_hash_table.get_packages_in_hub()) > 0 and len(self.loading_dock) < Truck.max_packages:  #
                 if len(self.loading_dock) == 0:
                     closest_package = self.graph.get_closest_location(start_location, self.priority_packages_hash_table.get_packages_in_hub())
@@ -93,7 +94,9 @@ class PHub:
             self.graph.sort_packages(Truck2, start_location)
             packages_delivered = len(Truck2.delivery_list)
             self.current_time = Truck2.deliver_packages(self.graph, self.current_time)
+            print(self.package_count)
             self.package_count -= packages_delivered
+            print(self.package_count)
         print(self.current_time)
         print('All packages deliverd in ' + str(Truck2.distance_driven) + ' miles!')
 
