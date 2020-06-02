@@ -6,7 +6,7 @@ import collections
 # Hub class
  
 class PHub:
-    def __init__(self, package_overview_time):
+    def __init__(self):
         self.priority_packages_hash_table = HashTable(50)
         self.packages_hash_table = HashTable(50)
         self.late_packages_hash_table = HashTable(10)
@@ -18,12 +18,28 @@ class PHub:
 
     def load_package(self, package):
         self.loading_dock.append(package)
-        package.status = 'Loaded on Truck'
+        package.status = 'Loaded on Truck 2'
+    
+    def print_package_statuses(self, package_count, stop_time):
+        self.package_count = package_count
+        self.stop_time = stop_time
+        if self.package_count > 0:
+            print('Status of all packages at ' + str(self.stop_time))
+        print('----------Late arrival package statuses----------')
+        for package in self.late_packages_hash_table.get_all_values():
+            print('Package #' + str(package.package_ID) + ' status: ' + package.status)
+        print('----------Priority package statuses----------')
+        for package in self.priority_packages_hash_table.get_all_values():
+            print('Package #' + str(package.package_ID) + ' status: ' + package.status)
+        print('----------Package statuses----------')        
+        for package in self.packages_hash_table.get_all_values():
+            print('Package #' + str(package.package_ID) + ' status: ' + package.status)
+        
 
-    def print_package_statuses(self):
-        for package in self.priority_packages_hash_table:
-            print(package.address)
-    def start(self, package_overview_time):
+
+    
+    def start(self, stop_time):
+        self.stop_time = stop_time
         #Reads Packages CSV file and instantiates a new package for each row
         #if package delivery by is end of day, package is appended to the regular package hash table
         #if package has an early delivery time, package is appended in to the priority package table.
@@ -64,14 +80,13 @@ class PHub:
         
 
         
-        while self.package_count > 0:
-            while self.current_time > datetime.datetime(2020,3,15,9,45,0) and len(self.late_packages_hash_table.get_packages_in_hub()) > 0 and len(self.loading_dock) < Truck.max_packages:  #
+        while self.package_count > 0 and self.current_time < self.stop_time:
+            while len(self.late_packages_hash_table.get_packages_in_hub()) > 0 and len(self.loading_dock) < Truck.max_packages and self.current_time > datetime.datetime(2020,3,15,10,20,0) :  #
                 if len(self.loading_dock) == 0:
                     closest_package = self.graph.get_closest_location(start_location, self.late_packages_hash_table.get_packages_in_hub())
                     self.load_package(closest_package)
                 closest_package = self.graph.get_closest_location(self.loading_dock[-1], self.late_packages_hash_table.get_packages_in_hub())
                 self.load_package(closest_package)
-            print('done')
             while len(self.priority_packages_hash_table.get_packages_in_hub()) > 0 and len(self.loading_dock) < Truck.max_packages:  #
                 if len(self.loading_dock) == 0:
                     closest_package = self.graph.get_closest_location(start_location, self.priority_packages_hash_table.get_packages_in_hub())
@@ -93,12 +108,12 @@ class PHub:
 
             self.graph.sort_packages(Truck2, start_location)
             packages_delivered = len(Truck2.delivery_list)
-            self.current_time = Truck2.deliver_packages(self.graph, self.current_time)
-            print(self.package_count)
+            self.current_time = Truck2.deliver_packages(self.graph, self.current_time, self.stop_time)
             self.package_count -= packages_delivered
-            print(self.package_count)
-        print(self.current_time)
-        print('All packages deliverd in ' + str(Truck2.distance_driven) + ' miles!')
+        self.print_package_statuses(self.package_count, self.stop_time)
+        if self.package_count == 0:
+            print('Packages deliverd in ' + str(Truck2.distance_driven) + ' miles!')
+        
 
         
 

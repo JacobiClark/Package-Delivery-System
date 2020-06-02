@@ -1,5 +1,5 @@
-
-class HashTable(object):
+#JACOB CLARK 001190089
+class HashTable():
     def __init__(self, buckets=10):
         # Initiate our table with empty values.
         self.table = [None] * buckets
