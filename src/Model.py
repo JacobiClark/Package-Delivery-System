@@ -21,7 +21,7 @@ class Graph:
             if self.calculate_distance(from_location, location) < self.calculate_distance(from_location, closest_location):
                 closest_location = location
         return closest_location
-
+    #Sorts packages on this truck's delivery list (O(n^2))
     def sort_packages(self, Truck, start_location_object):
         sorted_list = []
         current_location = start_location_object
