@@ -1,9 +1,12 @@
+#Jacob Clark 001190089
 from PHub import PHub
 import csv
 import datetime
 
 
 def main():
+	#Controls program CLI
+	#Time Complexity: O(1)
 	phub = PHub()
 	user_input = int(input("Welcome to WGU package delivery service!\nTo view all package statuses at a given time, enter 1.\nTo simulate a day's delivery, please press 2.\n"))
 	def get_stop_time():
@@ -15,8 +18,6 @@ def main():
 		phub.start(get_stop_time())
 	else:
 		phub.start(datetime.datetime(9999,3,15,0,0,0))
-
-
 
 if __name__ == "__main__":
 	main()

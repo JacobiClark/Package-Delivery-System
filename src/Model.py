@@ -1,27 +1,36 @@
+#Jacob Clark 001190089
 from HashTable import HashTable
 import datetime
 
 class Graph:
+    #Initiates an instance of a Graph Class
     def __init__(self):
         self.locations_hash_table = HashTable(25)
         self.distances_list = []
-
+    #Takes a location as paramaters and inserts it into the locations hash table
+    #Time Complexity: O(1)
     def add_location(self, new_location):
         self.locations_hash_table.insert_kvp(new_location.location_ID, new_location)
-
+    #Takes two locations and a distance as paramaters, and inserts a node into the adjacency list with weight equal to the inputted distance
+    #Time Complexity: O(1)
     def add_path(self, from_location, to_location, distance = 1.0):
         self.locations_hash_table.get_value(from_location).add_adjacent_path(self.locations_hash_table.get_value(to_location), distance)
-    #Calculates distance between two locations using values from the first location's adjacency list
+    #Takes two locations as paramaters, then calculates the distance by looking up the from location in the locations hash table, and then
+    #finding the adjacency list entry of the to location and returning the edge weight.
+    #Time Complexity: O(n)
     def calculate_distance(self, from_location, to_location):
         return float(self.locations_hash_table.get_value(from_location.address).adjacent_paths[to_location.address])
-
+    #Searches through a location list and returns the closest instance to the current locattion
+    #Time Complexity: O(n)
     def get_closest_location(self, from_location, to_location_list):
         closest_location = to_location_list[0]
         for location in to_location_list:
             if self.calculate_distance(from_location, location) < self.calculate_distance(from_location, closest_location):
                 closest_location = location
         return closest_location
-    #Sorts packages on this truck's delivery list (O(n^2))
+    #Sorts packages in a Truck by first finding the closest location to the hub and appending as the first package, sets it as the current location,
+    #and repeats until all packages have been sorted.
+    #Time Complexity: O(n^2)
     def sort_packages(self, Truck, start_location_object):
         sorted_list = []
         current_location = start_location_object
@@ -39,18 +48,21 @@ class Graph:
 
 
 class Location():
+    #takes in paramaters and instantiates a location object
     def __init__(self, location_ID, name, address, zip_code):
         self.adjacent_paths = {}
         self.location_ID = int(location_ID)
         self.name = name
         self.address = address
         self.zip_code = zip_code
-
+    #Takes in a location and adds that location to the adjacency list with inputted weight as path distance
+    ##Time Complexity: O(1)
     def add_adjacent_path(self, to_location, distance = 0):
         self.adjacent_paths[to_location] = distance
 
 
 class Package:
+    #takes in paramaters and instantiates a package object
     def __init__(self, package_ID, address, city, state, zip_code, deliver_by, weight_in_kilograms, package_notes):
         self.package_ID = int(package_ID)
         self.address = address
@@ -68,7 +80,6 @@ class Package:
 
 class Truck:
     max_packages = 16
-   
     def __init__(self, truck_number, start_location, current_time):
         self.max_packages = 16
         self.avg_speed_MPH = 18
@@ -77,14 +88,16 @@ class Truck:
         self.start_location = start_location
         self.distance_driven = 0
         self.delivery_list = []
-    #Appends package to called truck's delivery list
+    #takes a package as input and adds it to the truck's delivery list
     def load_package(self, package):
         if len(self.delivery_list) < self.max_packages:
             self.delivery_list.append(package)
-    #Checks to see if there are packages on called truck
+    #helper function to determine if a truck has packages
     def has_packages(self):
         return len(self.delivery_list) > 0
-    #While packages are in the truck, deliver the packages and make required adjustments to packages and truck data
+    #While the truck has packages, packages are delivered sequentially from the list since they are already sorted. Trip time is also
+    #calculated and appended to the overall time of the day.
+    #Time Complexity: O(n)
     def deliver_packages(self, Graph, current_time, stop_time):
         current_location = self.start_location
         self.current_time = current_time
@@ -100,6 +113,7 @@ class Truck:
             del self.delivery_list[0]
         self.distance_driven += Graph.calculate_distance(current_location, Graph.locations_hash_table.get_value('Hub'))
         return self.current_time
-    #Checks to see if packages can still be loaded
+
+    #Helper function to determine if a package can be appended to the delivery list
     def has_room(self):
         return len(self.delivery_list) < self.max_packages
