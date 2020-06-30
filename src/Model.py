@@ -11,7 +11,7 @@ class Graph:
 
     def add_path(self, from_location, to_location, distance = 1.0):
         self.locations_hash_table.get_value(from_location).add_adjacent_path(self.locations_hash_table.get_value(to_location), distance)
-
+    #Calculates distance between two locations using values from the first location's adjacency list
     def calculate_distance(self, from_location, to_location):
         return float(self.locations_hash_table.get_value(from_location.address).adjacent_paths[to_location.address])
 
@@ -77,14 +77,14 @@ class Truck:
         self.start_location = start_location
         self.distance_driven = 0
         self.delivery_list = []
-
+    #Appends package to called truck's delivery list
     def load_package(self, package):
         if len(self.delivery_list) < self.max_packages:
             self.delivery_list.append(package)
-
+    #Checks to see if there are packages on called truck
     def has_packages(self):
         return len(self.delivery_list) > 0
-
+    #While packages are in the truck, deliver the packages and make required adjustments to packages and truck data
     def deliver_packages(self, Graph, current_time, stop_time):
         current_location = self.start_location
         self.current_time = current_time
@@ -100,7 +100,6 @@ class Truck:
             del self.delivery_list[0]
         self.distance_driven += Graph.calculate_distance(current_location, Graph.locations_hash_table.get_value('Hub'))
         return self.current_time
-
-
+    #Checks to see if packages can still be loaded
     def has_room(self):
         return len(self.delivery_list) < self.max_packages

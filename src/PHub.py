@@ -79,7 +79,7 @@ class PHub:
         Truck2 = Truck(2, start_location, self.current_time)
         
 
-        
+        #Appends packages to the loading dock starting with priority packages, then regular packages, and adds in late packages when they come.
         while self.package_count > 0 and self.current_time < self.stop_time:
             while len(self.late_packages_hash_table.get_packages_in_hub()) > 0 and len(self.loading_dock) < Truck.max_packages and self.current_time > datetime.datetime(2020,3,15,10,20,0) :  #
                 if len(self.loading_dock) == 0:
@@ -106,11 +106,15 @@ class PHub:
                     Truck2.load_package(package)
                     self.loading_dock.remove(package)
 
+            #Sort packages on Truck's delivery list
             self.graph.sort_packages(Truck2, start_location)
             packages_delivered = len(Truck2.delivery_list)
+            #Make requried adjustments to time and package count
             self.current_time = Truck2.deliver_packages(self.graph, self.current_time, self.stop_time)
             self.package_count -= packages_delivered
+        #Prints statuses of all packages after program is finished running
         self.print_package_statuses(self.package_count, self.stop_time)
+        #If all packages delivered, prints miles
         if self.package_count == 0:
             print('Packages deliverd in ' + str(Truck2.distance_driven) + ' miles!')
         
